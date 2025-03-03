@@ -18,6 +18,10 @@ const fetchFromGhost = async endpoint => {
     return [];
   }
 
+  if (process.env.DEVONLY_SLIICE_ONLY_ONE_POSTS) {
+    options.limit = 1;
+  }
+
   while (currPage && currPage <= lastPage) {
     const ghostRes = await ghostAPI[endpoint]
       .browse({
@@ -37,6 +41,8 @@ const fetchFromGhost = async endpoint => {
 
     ghostRes.forEach(obj => data.push(obj));
     await wait(200);
+
+    if (process.env.DEVONLY_SLIICE_ONLY_ONE_POSTS) break;
   }
 
   return data;
